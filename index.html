@@ -122,16 +122,33 @@
     <div class="emoji">🧠</div>
     <div class="cover-title">AI 용어 사전</div>
     <div class="cover-sub">어원으로 기억하고, 연상으로 이해하는</div>
-    <div class="cover-tag">초보자를 위한 20가지 핵심 개념</div>
+    <div class="cover-tag">초보자를 위한 23가지 핵심 개념</div>
   </div>
 
   <!-- ── CHAPTER 1: AI에게 말 걸기 ─────────────────
-       프롬프트 → 시스템 프롬프트 → 컨텍스트 윈도우 → 토큰
+       LLM → 프롬프트 → 시스템 프롬프트 → 컨텍스트 윈도우 → 토큰
   ──────────────────────────────────────────────── -->
   <div class="slide section-break">
     <div class="section-number">1</div>
     <div class="section-title">AI에게 말 걸기</div>
-    <div class="section-subtitle">어떻게 지시하고, AI는 무엇을 본다</div>
+    <div class="section-subtitle">그 AI가 뭔지, 어떻게 지시하고, 무엇을 본다</div>
+  </div>
+
+  <!-- LLM — 모든 것의 기반 -->
+  <div class="slide" data-color="blue">
+    <div class="etymology">Large(크다) Language(언어) Model(모델) — 거대 언어 모델</div>
+    <div class="emoji">🏗️</div>
+    <div class="term-en">LLM</div>
+    <div class="term-kr">엘엘엠 / 거대 언어 모델</div>
+    <div class="story">
+      인터넷의 수천억 개 문장을 읽고 <strong>"다음에 어떤 단어가 올 확률이 높은가"</strong>를
+      학습한 거대한 예측 엔진이다.
+      GPT, Claude, Gemini — 요즘 화제의 AI들이 모두 LLM 위에 올라와 있다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      방대한 텍스트로 훈련된 언어 예측 모델. 프롬프트가 들어오면 확률적으로 가장 자연스러운 다음 단어를 이어 답변을 만든다.
+    </div>
   </div>
 
   <div class="slide" data-color="blue">
@@ -248,13 +265,14 @@
     <div class="term-en">Hallucination</div>
     <div class="term-kr">할루시네이션</div>
     <div class="story">
-      AI는 "가장 그럴듯한 다음 단어"를 계속 고르는 구조다.
-      정답이 없어도 <strong>자연스러운 문장은 만들어진다</strong> — 그게 문제다.
-      사막에서 목마른 사람이 없는 오아시스를 보는 것처럼, 자신있게 지어낸다.
+      LLM은 <strong>"다음에 올 확률이 가장 높은 단어"를 반복 선택</strong>하는 엔진이다.<br>
+      "서울의 인구는 약 ___" 뒤에는 숫자가 오는 게 자연스럽다 — 그래서 숫자를 뽑는다.<br>
+      정확한 값을 "알아서"가 아니라, <strong>그럴듯한 패턴을 따라갔을 뿐이다.</strong><br>
+      사막에서 목마른 사람이 없는 오아시스를 확신하는 것처럼, 자신있게 지어낸다.
     </div>
     <div class="meaning">
-      <div class="meaning-label">AI에서는</div>
-      없는 사실을 그럴듯하게 만들어내는 현상. 팩트 확인은 항상 사람이 해야 하는 이유.
+      <div class="meaning-label">왜 지어내는가</div>
+      진실을 검색하는 게 아니라 확률적으로 자연스러운 다음 단어를 고르기 때문. 사실 데이터가 없어도 문장은 완성된다. 팩트 확인은 항상 사람이 해야 하는 이유.
     </div>
   </div>
 
@@ -300,12 +318,12 @@
   </div>
 
   <!-- ── CHAPTER 4: AI가 직접 행동한다 ─────────────
-       에이전트 → 툴 콜 → 오케스트레이션
+       에이전트 → 툴 콜 → 오케스트레이션 → 메모리 → HITL
   ──────────────────────────────────────────────── -->
   <div class="slide section-break">
     <div class="section-number">4</div>
     <div class="section-title">AI가 직접 행동한다</div>
-    <div class="section-subtitle">스스로 판단하고, 도구를 쓰고, 협력하기까지</div>
+    <div class="section-subtitle">스스로 판단하고, 도구를 쓰고, 기억하고, 사람과 협력하기까지</div>
   </div>
 
   <div class="slide" data-color="purple">
@@ -357,6 +375,41 @@
     </div>
   </div>
 
+  <!-- 메모리 — 에이전트가 기억하는 방법 -->
+  <div class="slide" data-color="purple">
+    <div class="etymology">Memory — 기억 / 단기 기억 vs 장기 기억</div>
+    <div class="emoji">🗒️</div>
+    <div class="term-en">Memory</div>
+    <div class="term-kr">메모리</div>
+    <div class="story">
+      탐정은 오늘 들은 단서는 머릿속에 담고(단기),
+      중요한 사실은 수첩에 적어 나중에도 꺼낸다(장기).
+      에이전트도 지금 대화는 <strong>컨텍스트 윈도우</strong>에,
+      오래 기억해야 할 것은 <strong>외부 DB나 파일</strong>에 저장한다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      단기 메모리(컨텍스트 윈도우) + 장기 메모리(외부 저장소). 둘을 조합해야 세션이 끝나도 기억이 유지된다.
+    </div>
+  </div>
+
+  <!-- HITL — 사람이 루프 안에 있다 -->
+  <div class="slide" data-color="purple">
+    <div class="etymology">Human-in-the-Loop — 루프(반복 흐름) 안에 사람을 넣다</div>
+    <div class="emoji">🚦</div>
+    <div class="term-en">HITL</div>
+    <div class="term-kr">에이치아이티엘 / 사람 개입</div>
+    <div class="story">
+      자동 조종 장치를 켠 비행기도 <strong>이착륙과 긴급 상황엔 기장이 직접 조종</strong>한다.
+      에이전트가 아무리 똑똑해도 중요한 결정 직전에는 사람에게 확인을 받는 구조 —
+      그게 HITL이다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      에이전트 흐름 중 특정 단계에서 사람의 승인·수정을 받는 구조. 자동화의 안전장치.
+    </div>
+  </div>
+
   <!-- ── CHAPTER 5: AI가 문서를 검색해 답한다 ───────
        RAG → 청킹 → 임베딩 → 벡터 DB → 인덱싱
        → 시멘틱 서치 → 리트리버 → 그라운딩
@@ -404,18 +457,19 @@
 
   <!-- 임베딩 — 잘린 조각을 숫자 좌표로 -->
   <div class="slide" data-color="blue">
-    <div class="etymology">Embed — 박아 넣다, 심다 / 지도에 핀을 꽂듯</div>
+    <div class="etymology">Embed — 박아 넣다, 심다 / 의미를 숫자 공간에 심는다</div>
     <div class="emoji">📍</div>
     <div class="term-en">Embedding</div>
     <div class="term-kr">임베딩</div>
     <div class="story">
-      서울과 부산은 지도 위 <strong>다른 좌표</strong>에 있다.
-      "사랑"과 "애정"은 의미가 비슷하니 임베딩 공간에서 <strong>가까운 좌표</strong>에 놓인다.
-      청킹으로 잘라낸 조각들을 각각 숫자 좌표로 변환한다.
+      컴퓨터는 글자를 이해 못하고 <strong>숫자만 계산</strong>한다.
+      그래서 "사랑"이라는 글자를 [0.82, −0.14, 0.63, …] 같은 좌표로 변환한다.
+      "애정"도 변환하면 좌표가 비슷하게 나온다 — 의미가 가까우니까.
+      이제 <strong>"얼마나 비슷한가"를 거리로 계산</strong>할 수 있게 된다.
     </div>
     <div class="meaning">
       <div class="meaning-label">AI에서는</div>
-      텍스트를 다차원 숫자 좌표로 변환하는 것. 의미가 비슷할수록 좌표가 가깝다.
+      텍스트를 다차원 숫자 벡터로 변환하는 것. 의미가 비슷할수록 좌표 간 거리가 가깝고, 이 거리로 유사도를 계산한다.
     </div>
   </div>
 
@@ -509,13 +563,13 @@
     <div class="emoji">🚀</div>
     <div class="cover-title" style="font-size:2rem">전체 흐름 한눈에</div>
     <div style="max-width:720px; margin-top:32px; text-align:left; line-height:2.4; font-size:0.92rem; color:#a0aec0">
-      <div>🎭 <strong style="color:#fff">프롬프트</strong> → 🎬 <strong style="color:#fff">시스템 프롬프트</strong> → 🪟 <strong style="color:#fff">컨텍스트</strong> → 🎫 <strong style="color:#fff">토큰</strong></div>
+      <div>🏗️ <strong style="color:#fff">LLM</strong> → 🎭 <strong style="color:#fff">프롬프트</strong> → 🎬 <strong style="color:#fff">시스템 프롬프트</strong> → 🪟 <strong style="color:#fff">컨텍스트</strong> → 🎫 <strong style="color:#fff">토큰</strong></div>
       <div style="color:#4a5568; font-size:0.78rem; margin: -8px 0 10px 4px">AI에게 말 걸기</div>
       <div>🌡️ <strong style="color:#fff">온도</strong> → 🎯 <strong style="color:#fff">Top K/P</strong> → 👻 <strong style="color:#fff">할루시네이션</strong></div>
       <div style="color:#4a5568; font-size:0.78rem; margin: -8px 0 10px 4px">답을 만드는 방식과 부작용</div>
       <div>🎻 <strong style="color:#fff">파인튜닝</strong> → 👁️ <strong style="color:#fff">멀티모달</strong></div>
       <div style="color:#4a5568; font-size:0.78rem; margin: -8px 0 10px 4px">AI를 내 것으로</div>
-      <div>🕵️ <strong style="color:#fff">에이전트</strong> → 🔧 <strong style="color:#fff">툴 콜</strong> → 🎼 <strong style="color:#fff">오케스트레이션</strong></div>
+      <div>🕵️ <strong style="color:#fff">에이전트</strong> → 🔧 <strong style="color:#fff">툴 콜</strong> → 🎼 <strong style="color:#fff">오케스트레이션</strong> → 🗒️ <strong style="color:#fff">메모리</strong> → 🚦 <strong style="color:#fff">HITL</strong></div>
       <div style="color:#4a5568; font-size:0.78rem; margin: -8px 0 10px 4px">AI가 직접 행동한다</div>
       <div>📚 <strong style="color:#fff">RAG</strong> → 🍕 <strong style="color:#fff">청킹</strong> → 📍 <strong style="color:#fff">임베딩</strong> → 🗄️ <strong style="color:#fff">벡터DB</strong> → 📑 <strong style="color:#fff">인덱싱</strong> → 🔍 <strong style="color:#fff">시멘틱서치</strong> → 🐕 <strong style="color:#fff">리트리버</strong> → ⚡ <strong style="color:#fff">그라운딩</strong></div>
       <div style="color:#4a5568; font-size:0.78rem; margin: -8px 0 0 4px">AI가 문서를 검색해 답한다</div>
@@ -540,10 +594,10 @@
 
   const labels = [
     '',
-    'Chapter 1', 'Chapter 1', 'Chapter 1', 'Chapter 1', 'Chapter 1',
+    'Chapter 1', 'Chapter 1', 'Chapter 1', 'Chapter 1', 'Chapter 1', 'Chapter 1',
     'Chapter 2', 'Chapter 2', 'Chapter 2', 'Chapter 2',
     'Chapter 3', 'Chapter 3', 'Chapter 3',
-    'Chapter 4', 'Chapter 4', 'Chapter 4', 'Chapter 4',
+    'Chapter 4', 'Chapter 4', 'Chapter 4', 'Chapter 4', 'Chapter 4', 'Chapter 4',
     'Chapter 5', 'Chapter 5', 'Chapter 5', 'Chapter 5', 'Chapter 5', 'Chapter 5', 'Chapter 5', 'Chapter 5', 'Chapter 5',
     ''
   ];
