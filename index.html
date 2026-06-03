@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 용어 사전 — 연상으로 익히기</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    background: #0f0f14;
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .slideshow {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+  }
+
+  .slide {
+    display: none;
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 80px;
+    text-align: center;
+  }
+
+  .slide.active {
+    display: flex;
+  }
+
+  /* 커버 슬라이드 */
+  .slide.cover {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  }
+
+  .cover-title {
+    font-size: 3.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  .cover-sub {
+    font-size: 1.3rem;
+    color: #a0aec0;
+    margin-bottom: 40px;
+  }
+
+  .cover-tag {
+    background: rgba(99, 179, 237, 0.15);
+    border: 1px solid rgba(99, 179, 237, 0.4);
+    color: #63b3ed;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  /* 일반 슬라이드 배경 팔레트 */
+  .slide[data-color="blue"]    { background: linear-gradient(135deg, #0f0f14 0%, #0d1b2a 100%); }
+  .slide[data-color="purple"]  { background: linear-gradient(135deg, #0f0f14 0%, #1a0d2e 100%); }
+  .slide[data-color="green"]   { background: linear-gradient(135deg, #0f0f14 0%, #0d2a1a 100%); }
+  .slide[data-color="orange"]  { background: linear-gradient(135deg, #0f0f14 0%, #2a1a0d 100%); }
+  .slide[data-color="red"]     { background: linear-gradient(135deg, #0f0f14 0%, #2a0d0d 100%); }
+
+  /* 어원 뱃지 */
+  .etymology {
+    font-size: 0.82rem;
+    color: #718096;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+    letter-spacing: 0.5px;
+  }
+
+  /* 이모지 */
+  .emoji {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    line-height: 1;
+  }
+
+  /* 용어명 */
+  .term-en {
+    font-size: 0.95rem;
+    color: #718096;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .term-kr {
+    font-size: 2.6rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+  }
+
+  /* 연상 스토리 */
+  .story {
+    font-size: 1.15rem;
+    color: #cbd5e0;
+    line-height: 1.7;
+    max-width: 680px;
+    margin-bottom: 36px;
+  }
+
+  .story strong {
+    color: #fff;
+  }
+
+  /* AI 의미 박스 */
+  .meaning {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-left: 4px solid;
+    border-radius: 12px;
+    padding: 18px 28px;
+    max-width: 680px;
+    text-align: left;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+
+  .meaning-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .slide[data-color="blue"]   .meaning { border-left-color: #63b3ed; }
+  .slide[data-color="blue"]   .meaning-label { color: #63b3ed; }
+  .slide[data-color="purple"] .meaning { border-left-color: #b794f4; }
+  .slide[data-color="purple"] .meaning-label { color: #b794f4; }
+  .slide[data-color="green"]  .meaning { border-left-color: #68d391; }
+  .slide[data-color="green"]  .meaning-label { color: #68d391; }
+  .slide[data-color="orange"] .meaning { border-left-color: #f6ad55; }
+  .slide[data-color="orange"] .meaning-label { color: #f6ad55; }
+  .slide[data-color="red"]    .meaning { border-left-color: #fc8181; }
+  .slide[data-color="red"]    .meaning-label { color: #fc8181; }
+
+  /* 섹션 구분 슬라이드 */
+  .slide.section-break {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0d0d1a 100%);
+  }
+
+  .section-number {
+    font-size: 5rem;
+    font-weight: 900;
+    opacity: 0.08;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #a0aec0;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .section-subtitle {
+    color: #4a5568;
+    font-size: 1.1rem;
+    position: relative;
+  }
+
+  /* 네비게이션 */
+  .nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 100;
+  }
+
+  .nav-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-btn:hover { background: rgba(255,255,255,0.18); }
+
+  .slide-counter {
+    font-size: 0.85rem;
+    color: #4a5568;
+    min-width: 70px;
+    text-align: center;
+  }
+
+  /* 진행 바 */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #63b3ed, #b794f4);
+    transition: width 0.3s ease;
+    z-index: 100;
+  }
+
+  /* 키 힌트 */
+  .key-hint {
+    position: fixed;
+    bottom: 32px;
+    right: 40px;
+    font-size: 0.75rem;
+    color: #2d3748;
+  }
+
+  /* 카테고리 태그 */
+  .category-tag {
+    position: fixed;
+    top: 24px;
+    right: 40px;
+    font-size: 0.75rem;
+    color: #4a5568;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 4px 12px;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slideshow" id="slideshow">
+
+  <!-- 커버 -->
+  <div class="slide cover active">
+    <div class="emoji">🧠</div>
+    <div class="cover-title">AI 용어 사전</div>
+    <div class="cover-sub">어원으로 기억하고, 연상으로 이해하는</div>
+    <div class="cover-tag">초보자를 위한 20가지 핵심 개념</div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="slide section-break">
+    <div class="section-number">1</div>
+    <div class="section-title" style="position:relative">기본 구조</div>
+    <div class="section-subtitle" style="position:relative">AI와 대화하는 방식</div>
+  </div>
+
+  <!-- 1. 프롬프트 -->
+  <div class="slide" data-color="blue">
+    <div class="etymology">라틴어 promptus — "앞에 꺼내 놓인, 준비된"</div>
+    <div class="emoji">🎭</div>
+    <div class="term-en">Prompt</div>
+    <div class="term-kr">프롬프트</div>
+    <div class="story">
+      연극에서 배우가 대사를 잊으면 무대 뒤에서 <strong>귓속말로 알려주는 사람</strong>을 '프롬프터'라고 한다.
+      AI에게 건네는 지시문도 그 귓속말이다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      AI에게 건네는 모든 지시·질문. 어떻게 쓰냐에 따라 결과가 완전히 달라진다.
+    </div>
+  </div>
+
+  <!-- 2. 컨텍스트 윈도우 -->
+  <div class="slide" data-color="blue">
+    <div class="etymology">라틴어 contextus — "함께(con) 엮어짠(texere) 것"</div>
+    <div class="emoji">🪟</div>
+    <div class="term-en">Context Window</div>
+    <div class="term-kr">컨텍스트 윈도우</div>
+    <div class="story">
+      창문 너머 풍경을 보듯, AI는 <strong>창 크기만큼만</strong> 대화를 볼 수 있다.
+      창이 작으면 오래된 내용이 밖으로 밀려나 — AI가 "잊는" 것처럼 보이는 이유다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      AI가 한 번에 볼 수 있는 대화의 최대 범위. 초과하면 앞 내용이 사라진다.
+    </div>
+  </div>
+
+  <!-- 3. 토큰 -->
+  <div class="slide" data-color="blue">
+    <div class="etymology">라틴어 tokenum — "표시, 증표" → 지하철 토큰·티켓</div>
+    <div class="emoji">🎫</div>
+    <div class="term-en">Token</div>
+    <div class="term-kr">토큰</div>
+    <div class="story">
+      지하철 토큰처럼 <strong>AI가 처리하는 최소 단위</strong>다.
+      단어 하나가 한 토큰이 아니라 — "안녕하세요"는 여러 조각으로 쪼개진다.
+      한국어는 영어보다 토큰을 더 많이 쓴다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      텍스트를 처리하는 기본 단위. 비용과 속도가 모두 토큰 수에 비례한다.
+    </div>
+  </div>
+
+  <!-- 4. 시스템 프롬프트 -->
+  <div class="slide" data-color="purple">
+    <div class="etymology">System = 체계·운영 / 사용자 눈에 안 보이는 무대 뒤</div>
+    <div class="emoji">🎬</div>
+    <div class="term-en">System Prompt</div>
+    <div class="term-kr">시스템 프롬프트</div>
+    <div class="story">
+      영화 감독이 배우에게 <strong>"넌 탐정 캐릭터야, 존댓말만 써"</strong>라고 미리 지시하는 것.
+      대화가 시작되기 전, 숨겨진 곳에서 AI의 성격·역할을 세팅한다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      사용자에게 보이지 않는 사전 지시문. 챗봇·서비스의 성격을 여기서 만든다.
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="slide section-break">
+    <div class="section-number">2</div>
+    <div class="section-title" style="position:relative">출력 조절</div>
+    <div class="section-subtitle" style="position:relative">AI 답변의 성격을 바꾸는 다이얼</div>
+  </div>
+
+  <!-- 5. 할루시네이션 -->
+  <div class="slide" data-color="red">
+    <div class="etymology">라틴어 hallucinari — "헛것을 보다, 방황하다"</div>
+    <div class="emoji">👻</div>
+    <div class="term-en">Hallucination</div>
+    <div class="term-kr">할루시네이션</div>
+    <div class="story">
+      사막에서 목마른 사람이 <strong>없는 오아시스를 보는 것</strong>처럼,
+      AI는 정답이 없어도 그럴듯한 문장을 만들어낸다.
+      모른다고 하지 않고 자신있게 지어내는 것이 문제다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      없는 사실을 그럴듯하게 만들어내는 현상. 팩트 확인은 항상 사람이 해야 하는 이유.
+    </div>
+  </div>
+
+  <!-- 6. 온도 -->
+  <div class="slide" data-color="orange">
+    <div class="etymology">Temperature — 물리학에서 입자의 활동성</div>
+    <div class="emoji">🌡️</div>
+    <div class="term-en">Temperature</div>
+    <div class="term-kr">온도</div>
+    <div class="story">
+      얼음(0°)은 형태가 고정되고 예측 가능하다.
+      수증기(높은 온도)는 자유롭게 퍼지지만 불규칙하다.
+      <strong>AI의 창의성도 온도 다이얼 하나로 조절</strong>된다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      낮으면 → 안전하고 일관된 답변. 높으면 → 창의적이지만 엉뚱할 수 있음.
+    </div>
+  </div>
+
+  <!-- 7. TOP K / TOP P -->
+  <div class="slide" data-color="orange">
+    <div class="etymology">Top K = 상위 K개 / Top P = 누적 확률 P%까지</div>
+    <div class="emoji">🎯</div>
+    <div class="term-en">Top K / Top P</div>
+    <div class="term-kr">탑 케이 / 탑 피</div>
+    <div class="story">
+      식당에서 메뉴를 고를 때 —<br>
+      <strong>Top K:</strong> "베스트 5 메뉴 중 골라"<br>
+      <strong>Top P:</strong> "고객 선택 합계 80%에 드는 것들 중 골라"<br>
+      AI도 다음 단어를 이 방식으로 후보를 좁혀 선택한다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      다음 단어 후보군의 폭을 설정하는 파라미터. 온도와 함께 출력 다양성을 제어.
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="slide section-break">
+    <div class="section-number">3</div>
+    <div class="section-title" style="position:relative">모델 훈련</div>
+    <div class="section-subtitle" style="position:relative">AI를 내 것으로 만드는 방법</div>
+  </div>
+
+  <!-- 8. 파인튜닝 -->
+  <div class="slide" data-color="green">
+    <div class="etymology">Fine-tuning — 악기를 미세하게 조율하다</div>
+    <div class="emoji">🎻</div>
+    <div class="term-en">Fine-tuning</div>
+    <div class="term-kr">파인튜닝</div>
+    <div class="story">
+      피아노를 처음 만드는 게 아니라 — 이미 만들어진 피아노의
+      <strong>줄을 미세하게 조여 내 공연장에 맞게 튜닝</strong>하는 것.
+      기존 AI 모델을 내 회사 데이터로 추가 훈련시킨다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      기존 모델에 특정 데이터를 추가 학습시켜 특정 역할에 최적화하는 과정.
+    </div>
+  </div>
+
+  <!-- 9. 멀티모달 -->
+  <div class="slide" data-color="green">
+    <div class="etymology">Multi(여러) + Modal(방식, 양식) — 여러 감각 채널</div>
+    <div class="emoji">👁️‍🗨️</div>
+    <div class="term-en">Multimodal</div>
+    <div class="term-kr">멀티모달</div>
+    <div class="story">
+      사람은 눈으로 보고, 귀로 듣고, 글을 읽으며 동시에 이해한다.
+      <strong>멀티모달 AI는 텍스트·이미지·음성을 동시에 처리</strong>할 수 있다.
+      "이 사진에서 뭐가 보여?" 같은 질문이 가능해지는 이유.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      텍스트 외에 이미지, 음성, 영상 등 여러 입력 형식을 동시에 처리하는 능력.
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="slide section-break">
+    <div class="section-number">4</div>
+    <div class="section-title" style="position:relative">에이전트</div>
+    <div class="section-subtitle" style="position:relative">AI가 스스로 행동할 때</div>
+  </div>
+
+  <!-- 10. 에이전트 -->
+  <div class="slide" data-color="purple">
+    <div class="etymology">라틴어 agere — "행동하다" → 대리인, 요원</div>
+    <div class="emoji">🕵️</div>
+    <div class="term-en">Agent</div>
+    <div class="term-kr">에이전트</div>
+    <div class="story">
+      제임스 본드에게 <strong>"악당 제거"라는 목표만 주면</strong> 알아서 이동 수단을 찾고,
+      무기를 선택하고, 계획을 세운다.
+      에이전트 AI도 목표만 받으면 도구를 골라 스스로 행동한다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      목표를 받으면 필요한 도구를 스스로 선택하고 단계적으로 실행하는 AI.
+    </div>
+  </div>
+
+  <!-- 11. 툴 콜 -->
+  <div class="slide" data-color="purple">
+    <div class="etymology">Tool Call — 도구(Tool)를 호출(Call)하다</div>
+    <div class="emoji">🔧</div>
+    <div class="term-en">Tool Call</div>
+    <div class="term-kr">툴 콜</div>
+    <div class="story">
+      요리사가 재료를 손질할 때 칼을, 볶을 때 프라이팬을 <strong>필요에 따라 집어든다.</strong>
+      AI도 검색이 필요하면 검색 도구를, 계산이 필요하면 계산기를 호출해 쓴다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      AI가 외부 기능(검색, 계산, 파일 저장 등)을 필요할 때 꺼내 쓰는 행위.
+    </div>
+  </div>
+
+  <!-- 12. 오케스트레이션 -->
+  <div class="slide" data-color="purple">
+    <div class="etymology">Orchestra — 여러 악기를 지휘해 하나의 음악으로</div>
+    <div class="emoji">🎼</div>
+    <div class="term-en">Orchestration</div>
+    <div class="term-kr">오케스트레이션</div>
+    <div class="story">
+      바이올린, 첼로, 트럼펫이 각자 잘해도 <strong>지휘자 없이는 소음</strong>이 된다.
+      오케스트레이션은 여러 AI 에이전트가 제각각 움직이지 않도록
+      흐름을 설계하고 조율하는 것이다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      여러 에이전트의 역할·순서·협력을 설계하고 총괄 조율하는 것.
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="slide section-break">
+    <div class="section-number">5</div>
+    <div class="section-title" style="position:relative">RAG 파이프라인</div>
+    <div class="section-subtitle" style="position:relative">AI가 문서를 검색해 답하는 방법</div>
+  </div>
+
+  <!-- 13. RAG -->
+  <div class="slide" data-color="green">
+    <div class="etymology">Retrieval-Augmented Generation — 검색으로 보강한 생성</div>
+    <div class="emoji">📚</div>
+    <div class="term-en">RAG</div>
+    <div class="term-kr">래그</div>
+    <div class="story">
+      <strong>오픈북 시험</strong>처럼 — 모든 걸 외우는 대신
+      시험 중 책을 펼쳐 관련 페이지를 찾아 답하는 것.
+      AI가 내부 지식만 쓰지 않고 외부 문서를 실시간으로 찾아 답한다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      질문이 들어오면 관련 문서를 검색해 그것을 근거로 답변을 생성하는 방식.
+    </div>
+  </div>
+
+  <!-- 14. 청킹 -->
+  <div class="slide" data-color="green">
+    <div class="etymology">Chunk — 덩어리, 조각 / 큰 것을 나누는 행위</div>
+    <div class="emoji">🍕</div>
+    <div class="term-en">Chunking</div>
+    <div class="term-kr">청킹</div>
+    <div class="story">
+      피자 한 판을 통째로 먹을 수 없으니 <strong>조각으로 나눠</strong> 먹는다.
+      500페이지 보고서를 AI에게 통째로 줄 수 없으니
+      소화 가능한 크기로 잘라 처리한다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      긴 문서를 AI가 처리할 수 있는 크기로 나누는 작업. 어떻게 자르냐가 검색 품질을 결정.
+    </div>
+  </div>
+
+  <!-- 15. 임베딩 -->
+  <div class="slide" data-color="blue">
+    <div class="etymology">Embed — 박아 넣다, 심다 / 지도에 핀을 꽂듯</div>
+    <div class="emoji">📍</div>
+    <div class="term-en">Embedding</div>
+    <div class="term-kr">임베딩</div>
+    <div class="story">
+      서울과 부산은 지도 위 <strong>다른 좌표</strong>에 있다.
+      "사랑"과 "애정"은 의미가 비슷하니 임베딩 공간에서 <strong>가까운 좌표</strong>에 놓인다.
+      텍스트를 숫자 좌표로 변환해 의미의 거리를 측정할 수 있게 만든다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      텍스트를 다차원 숫자 좌표로 변환하는 것. 의미가 비슷할수록 좌표가 가깝다.
+    </div>
+  </div>
+
+  <!-- 16. 벡터 DB -->
+  <div class="slide" data-color="blue">
+    <div class="etymology">Vector — 방향과 크기를 가진 화살표 / Database — 창고</div>
+    <div class="emoji">🗄️</div>
+    <div class="term-en">Vector Database</div>
+    <div class="term-kr">벡터 DB</div>
+    <div class="story">
+      일반 창고는 이름으로 물건을 찾는다.
+      벡터 DB는 <strong>"이것과 비슷하게 생긴 걸 찾아줘"</strong>라고 하면 찾아준다.
+      임베딩된 숫자 좌표들을 저장하고, 가장 가까운 것을 순식간에 꺼내오는 특수 창고.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      임베딩 벡터를 저장하고, 유사도 기반 검색을 고속으로 처리하는 데이터베이스.
+    </div>
+  </div>
+
+  <!-- 17. 인덱싱 -->
+  <div class="slide" data-color="blue">
+    <div class="etymology">Index — 색인, 목차 / 책 뒤의 찾아보기</div>
+    <div class="emoji">📑</div>
+    <div class="term-en">Indexing</div>
+    <div class="term-kr">인덱싱</div>
+    <div class="story">
+      도서관 사서가 새 책이 들어오면 분류하고 카드에 기록해
+      <strong>나중에 빠르게 찾을 수 있게 준비</strong>해두는 것.
+      인덱싱은 문서를 임베딩해서 벡터 DB에 미리 저장해두는 사전 준비 작업이다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      문서를 청킹 → 임베딩 → 벡터 DB 저장까지 마쳐두는 사전 준비 과정.
+    </div>
+  </div>
+
+  <!-- 18. 시멘틱 서치 -->
+  <div class="slide" data-color="green">
+    <div class="etymology">Semantic — 의미론적 / 글자가 아닌 뜻을 본다</div>
+    <div class="emoji">🔍</div>
+    <div class="term-en">Semantic Search</div>
+    <div class="term-kr">시멘틱 서치</div>
+    <div class="story">
+      일반 검색은 "강아지"를 치면 "강아지"가 포함된 글만 찾는다.
+      시멘틱 서치는 <strong>"강아지"를 쳐도 "반려견", "puppy", "멍멍이"</strong>가 담긴 글을 찾는다.
+      키워드가 아닌 의미의 유사도로 검색한다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      글자 일치가 아닌 의미의 유사도로 문서를 검색하는 방식.
+    </div>
+  </div>
+
+  <!-- 19. 리트리버 -->
+  <div class="slide" data-color="green">
+    <div class="etymology">Retriever — "되찾아오는 것" / 사냥개 품종 이름</div>
+    <div class="emoji">🐕</div>
+    <div class="term-en">Retriever</div>
+    <div class="term-kr">리트리버</div>
+    <div class="story">
+      골든 리트리버는 사냥꾼이 쏜 <strong>사냥감을 물어오도록 훈련된</strong> 견종이다.
+      AI에서 리트리버는 사용자 질문을 받으면
+      벡터 DB에 뛰어들어 가장 관련 있는 청크를 물어온다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      질문과 가장 관련 있는 문서 조각을 벡터 DB에서 꺼내오는 역할.
+    </div>
+  </div>
+
+  <!-- 20. 그라운딩 -->
+  <div class="slide" data-color="orange">
+    <div class="etymology">Grounding — 접지(接地) / 땅에 연결해 안전하게</div>
+    <div class="emoji">⚡</div>
+    <div class="term-en">Grounding</div>
+    <div class="term-kr">그라운딩</div>
+    <div class="story">
+      전기가 <strong>땅(접지선)에 연결</strong>되지 않으면 감전 위험이 있다.
+      AI 답변도 실제 문서·데이터에 연결(접지)되지 않으면 할루시네이션이 튄다.
+      그라운딩은 AI를 실제 근거에 묶어두는 것이다.
+    </div>
+    <div class="meaning">
+      <div class="meaning-label">AI에서는</div>
+      AI 답변이 실제 문서·데이터에 근거하도록 묶어두는 것. 할루시네이션 방어막.
+    </div>
+  </div>
+
+  <!-- 마무리 슬라이드 -->
+  <div class="slide cover" style="background: linear-gradient(135deg, #0d1b2a 0%, #0f3460 100%)">
+    <div class="emoji">🚀</div>
+    <div class="cover-title" style="font-size:2.4rem">한 줄 요약</div>
+    <div style="max-width:700px; text-align:left; margin-top:32px; line-height:2; color:#a0aec0; font-size:1rem">
+      <div style="margin-bottom:8px">🎭 <strong style="color:#fff">프롬프트</strong> — AI에게 건네는 귓속말</div>
+      <div style="margin-bottom:8px">🪟 <strong style="color:#fff">컨텍스트 윈도우</strong> — AI가 볼 수 있는 대화의 창</div>
+      <div style="margin-bottom:8px">👻 <strong style="color:#fff">할루시네이션</strong> — 자신있게 지어내는 것</div>
+      <div style="margin-bottom:8px">🌡️ <strong style="color:#fff">온도</strong> — 창의성 조절 다이얼</div>
+      <div style="margin-bottom:8px">🕵️ <strong style="color:#fff">에이전트</strong> — 목표만 주면 알아서 움직이는 AI</div>
+      <div style="margin-bottom:8px">🐕 <strong style="color:#fff">리트리버</strong> — 관련 문서를 물어오는 사냥개</div>
+      <div>📍 <strong style="color:#fff">임베딩</strong> — 의미를 숫자 좌표로 박아넣는 것</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 네비게이션 -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← 이전</button>
+  <span class="slide-counter" id="counter">1 / 23</span>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">다음 →</button>
+</div>
+
+<div class="key-hint">← → 키보드로도 이동</div>
+<div class="category-tag" id="categoryTag"></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const categories = ['', '기본 구조', '기본 구조', '기본 구조', '기본 구조', '기본 구조', '출력 조절', '출력 조절', '출력 조절', '출력 조절', '모델 훈련', '모델 훈련', '모델 훈련', '에이전트', '에이전트', '에이전트', '에이전트', 'RAG', 'RAG', 'RAG', 'RAG', 'RAG', 'RAG', 'RAG', ''];
+
+  function updateSlide() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    document.getElementById('counter').textContent = `${current + 1} / ${total}`;
+    document.getElementById('progressBar').style.width = `${((current + 1) / total) * 100}%`;
+    document.getElementById('categoryTag').textContent = categories[current] || '';
+  }
+
+  function changeSlide(dir) {
+    current = Math.max(0, Math.min(total - 1, current + dir));
+    updateSlide();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+
+  updateSlide();
+</script>
+</body>
+</html>
